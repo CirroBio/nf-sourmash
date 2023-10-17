@@ -11,6 +11,7 @@ process gather {
     publishDir "${params.output}/matches/", mode: 'copy', overwrite: true, pattern: "*.matches.zip"
     publishDir "${params.output}/logs/", mode: 'copy', overwrite: true, pattern: "*.log"
     container "${params.container}"
+    tag "${sample}"
 
     input:
     tuple val(sample), path(sig)

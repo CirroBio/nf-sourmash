@@ -53,6 +53,7 @@ process single {
     publishDir "${params.output}/tax_metagenome/", mode: 'copy', overwrite: true, pattern: "*.csv"
     publishDir "${params.output}/logs/", mode: 'copy', overwrite: true, pattern: "*.log"
     container "${params.container}"
+    tag "${sample}"
 
     input:
     tuple val(sample), path(csv)
