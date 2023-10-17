@@ -27,7 +27,6 @@ sourmash sketch dna \
     inputs/* \
     --output "${sample}.sig.gz" \
     --name "${sample}" \
-    --check-sequence \
     2>&1 | tee "${sample}.sketch.log"
 """
 }
