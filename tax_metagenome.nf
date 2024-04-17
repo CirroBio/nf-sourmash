@@ -124,6 +124,7 @@ workflow {
 
 Parameters:
     samplesheet: ${params.samplesheet}
+    db:          ${params.db}
     tax_db:      ${params.tax_db}
     ksize:       ${params.ksize}
     output:      ${params.output}
