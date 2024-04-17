@@ -93,21 +93,21 @@ workflow tax_metagenome_wf {
     take:
         input_ch
     main:
-        if(!params.db){error "Must provide param: db"}
+        if(!params.tax_db){error "Must provide param: tax_db"}
         if(!params.output){error "Must provide param: output"}
 
         // Get the taxonomic database file
-        db = file(params.db, checkIfExists: true)
+        tax_db = file(params.tax_db, checkIfExists: true)
 
         // Count k-mers from the database in each sample
-        single(input_ch, db)
+        single(input_ch, tax_db)
 
         // Combine information across all samples
         all(
             input_ch
             .map{ it -> it[1] }
             .toSortedList(),
-            db
+            tax_db
         )
 
     emit:
@@ -124,7 +124,7 @@ workflow {
 
 Parameters:
     samplesheet: ${params.samplesheet}
-    db:          ${params.db}
+    tax_db:      ${params.tax_db}
     ksize:       ${params.ksize}
     output:      ${params.output}
     """
