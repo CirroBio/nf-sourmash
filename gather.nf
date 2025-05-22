@@ -18,8 +18,8 @@ process gather {
     path db
 
     output:
-    tuple val(sample), path("${sample}.gather.csv"), emit: csv
-    tuple val(sample), path("${sample}.matches.zip"), emit: matches
+    tuple val(sample), path("${sample}.gather.csv"), emit: csv, optional: true
+    tuple val(sample), path("${sample}.matches.zip"), emit: matches, optional: true
     path("${sample}.gather.log"), emit: log
 
     """#!/bin/bash
