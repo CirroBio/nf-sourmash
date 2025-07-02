@@ -60,7 +60,8 @@ process single {
     path tax_db
 
     output:
-    path "${sample}.tax.metagenome.*"
+    path "${sample}.tax.metagenome.*", emit: all
+    path "${sample}.tax.metagenome.*.krona.tsv", emit: krona_tsv
 
     """#!/bin/bash
 set -e
@@ -88,6 +89,22 @@ done
 """
 }
 
+process krona {
+    publishDir "${params.output}/tax_metagenome/", mode: 'copy', overwrite: true, pattern: "*.html"
+    container "${params.container_krona}"
+    input:
+    path tsv
+
+    output:
+    file "*.html"
+
+    script:
+    """#!/bin/bash
+TSV="${tsv}"
+ktImportText "\$TSV" -o "\${TSV%.tsv}.html"
+    """
+}
+
 
 workflow tax_metagenome_wf {
     take:
@@ -102,6 +119,9 @@ workflow tax_metagenome_wf {
         // Count k-mers from the database in each sample
         single(input_ch, tax_db)
 
+        // Build the Krona HTML plots
+        krona(single.out.krona_tsv.flatten())
+
         // Combine information across all samples
         all(
             input_ch
@@ -112,7 +132,7 @@ workflow tax_metagenome_wf {
 
     emit:
         all = all.out
-        single = single.out
+        single = single.out.all
 }
 
 workflow {
