@@ -15,7 +15,7 @@ process gather {
 
     input:
     tuple val(sample), path(sig)
-    path db
+    path "db/*"
 
     output:
     tuple val(sample), path("${sample}.gather.csv"), emit: csv, optional: true
@@ -26,12 +26,14 @@ process gather {
 set -e
 
 # Log the description of the database
-sourmash sig summarize "${db}"
+for DB in db/*; do
+    sourmash sig summarize "\${DB}"
+done
 
 # Compare the k-mers in the sample against the database
 sourmash gather \
     "${sig}" \
-    "${db}" \
+    db/* \
     --ksize "${params.ksize}" \
     --output "${sample}.gather.csv" \
     --save-matches "${sample}.matches.zip" \
